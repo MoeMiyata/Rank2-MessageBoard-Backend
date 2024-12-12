@@ -1,8 +1,8 @@
 // import { env } from 'process';
 import { DataSource } from 'typeorm';
 
-import dotenv from 'dotenv';
-dotenv.config();
+// import dotenv from 'dotenv';
+// dotenv.config();
 
 // require('dotenv').config();
 
