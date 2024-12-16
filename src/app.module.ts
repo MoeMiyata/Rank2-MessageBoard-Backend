@@ -7,6 +7,9 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { PostModule } from './post/post.module';
 import { AuthModule } from './auth/auth.module';
+// 追加（メッセージ一覧のリロード）
+import { MainController } from './main/main.controller';
+// 追加終了
 
 @Module({
   imports: [
@@ -33,7 +36,7 @@ import { AuthModule } from './auth/auth.module';
     PostModule,
     AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, MainController],
   providers: [AppService],
 })
 export class AppModule {}
