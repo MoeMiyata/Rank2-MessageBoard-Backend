@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+// import * as path from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +11,13 @@ async function bootstrap() {
     origin: '*',
     allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
   });
+
+  // // const path = require('path');
+  // app.get('/*', (req, res) => {
+  //   res.sendFile(
+  //     path.join('https://rank2-messageboard-frontend.onrender.com/index.html'),
+  //   );
+  // });
 
   // await app.listen(process.env.PORT ?? 3000);
   console.log(`linstening on port ${port}`);
