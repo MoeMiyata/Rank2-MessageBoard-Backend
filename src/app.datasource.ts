@@ -16,11 +16,11 @@ const AppDataSource = new DataSource({
   // username: 'miyatamoe',
   // password: 'miyatamoe',
   // database: 'postgres',
-  // 以下でデプロイ用
-  host: 'dpg-ctd69pm8ii6s738v2np0-a',
-  username: 'twosix',
-  password: 'YnT8gCisClIVUSmVT1UuNjnOWIgxSSPW',
-  database: 'twosix_ko4d',
+  // 以下デプロイ用
+  host: 'dpg-cu2vdl9opnds73803i0g-a',
+  username: 'rank2_messageboard_postgresql_user',
+  password: 'G81dAug0KTPYQU5qiYDu27VS4LqZvXv1',
+  database: 'rank2_messageboard_postgresql',
   entities: ['src/entities/*.ts'], //  エンティティファイル（後述）配列
   migrations: ['src/migrations/*.ts'], // マイグレーションファイル（後述）配列
 });
