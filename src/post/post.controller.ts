@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, Delete } from '@nestjs/common';
 import { PostService } from './post.service';
 
 @Controller('post')
@@ -20,5 +20,10 @@ export class PostController {
     @Query('records') records: number,
   ) {
     return await this.postService.getList(token, start, records);
+  }
+
+  @Delete()
+  async deletePost(@Query('token') token: string, @Query('id') id: number) {
+    return await this.postService.deletePost(token, id);
   }
 }
