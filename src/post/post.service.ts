@@ -37,7 +37,12 @@ export class PostService {
   }
 
   // GETリクエストに対して作成
-  async getList(token: string, start: number = 0, nr_records: number = 1) {
+  async getList(
+    token: string,
+    start: number = 0,
+    nr_records: number = 1,
+    keyword: string = '',
+  ) {
     // ログイン済みかチェック
     const now = new Date();
     const auth = await this.authRepository.findOne({
@@ -63,6 +68,13 @@ export class PostService {
       .orderBy('micro_post.created_at', 'DESC')
       .offset(start)
       .limit(nr_records);
+
+    // keywordが指定されている場合、contentに対してLIKE検索を追加
+    if (keyword) {
+      qb.andWhere('micro_post.content LIKE :keyword', {
+        keyword: `%${keyword}%`,
+      });
+    }
 
     type ResultType = {
       id: number;
