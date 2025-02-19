@@ -25,7 +25,7 @@ import { MainController } from './main/main.controller';
       // database: process.env.DB_NAME,
       // 以下デプロイ用
       host: 'dpg-cuqirrd2ng1s73afqqs0-a',
-      username: 'postgressql_y1ro',
+      username: 'two_six',
       password: 'h8rcdtLW3Zm3FOaKzM7OdmL6DY05G5i4',
       database: 'postgressql_y1ro',
 
