@@ -15,25 +15,25 @@ export class AuthService {
   ) {}
 
   async getAuth(name: string, password: string) {
-    // 検証のためユーザを事前定義
-    const predefinedUser = {
-      id: 1,
-      name: name,
-      hash: crypto.createHash('md5').update(password).digest('hex'), // パスワードはハッシュ化されていると仮定
-    };
-    const user = predefinedUser;
+    // // 検証のためユーザを事前定義
+    // const predefinedUser = {
+    //   id: 1,
+    //   name: name,
+    //   hash: crypto.createHash('md5').update(password).digest('hex'), // パスワードはハッシュ化されていると仮定
+    // };
+    // const user = predefinedUser;
 
     // name, passwordからUserレコード検索
     if (!password) {
       throw new UnauthorizedException(); // パスワードが指定されていない場合は認証失敗
     }
-    // const hash = crypto.createHash('md5').update(password).digest('hex');
-    // const user = await this.userRepository.findOne({
-    //   where: {
-    //     name: Equal(name),
-    //     hash: Equal(hash),
-    //   },
-    // });
+    const hash = crypto.createHash('md5').update(password).digest('hex');
+    const user = await this.userRepository.findOne({
+      where: {
+        name: Equal(name),
+        hash: Equal(hash),
+      },
+    });
 
     console.log('user:', user);
     // 見つからなければ認証失敗
