@@ -48,6 +48,10 @@ export class UserService {
         email: Equal(email),
       },
     });
+
+    console.log('usedUserName:', usedUserName);
+    console.log('usedUserEmail:', usedUserEmail);
+
     if (usedUserName) {
       throw new ConflictException('このユーザー名はすでに使用されています。');
     }
@@ -57,9 +61,6 @@ export class UserService {
         'このメールアドレスはすでに使用されています．',
       );
     }
-
-    console.log('usedUserName:', usedUserName);
-    console.log('usedUserEmail:', usedUserEmail);
 
     // ユーザー情報を保存
     await this.userRepository.save(record);
