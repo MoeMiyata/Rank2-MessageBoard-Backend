@@ -58,6 +58,9 @@ export class UserService {
       );
     }
 
+    console.log('usedUserName:', usedUserName);
+    console.log('usedUserEmail:', usedUserEmail);
+
     // ユーザー情報を保存
     await this.userRepository.save(record);
   }
