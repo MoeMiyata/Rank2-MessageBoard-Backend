@@ -2,8 +2,8 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
-  ConflictException,
-  // BadRequestException,
+  // ConflictException,
+  BadRequestException,
 } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -54,15 +54,15 @@ export class UserService {
     console.log('usedUserEmail:', usedUserEmail);
 
     if (usedUserName) {
-      throw new ConflictException('このユーザー名はすでに使用されています。');
-      // throw new BadRequestException();
+      // throw new ConflictException('このユーザー名はすでに使用されています。');
+      throw new BadRequestException();
     }
 
     if (usedUserEmail) {
-      throw new ConflictException(
-        'このメールアドレスはすでに使用されています．',
-      );
-      // throw new BadRequestException();
+      // throw new ConflictException(
+      //   'このメールアドレスはすでに使用されています．',
+      // );
+      throw new BadRequestException();
     }
 
     // ユーザー情報を保存
