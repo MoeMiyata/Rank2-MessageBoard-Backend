@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  ConflictException,
 } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,14 +21,37 @@ export class UserService {
   ) {}
 
   // POSTリクエストに対して作成
-  createUser(name: string, email: string, password: string) {
+  // createUser(name: string, email: string, password: string) {
+  //   const hash = createHash('md5').update(password).digest('hex');
+  //   const record = {
+  //     name: name,
+  //     email: email,
+  //     hash: hash,
+  //   };
+  //   this.userRepository.save(record);
+  // }
+  async createUser(name: string, email: string, password: string) {
     const hash = createHash('md5').update(password).digest('hex');
     const record = {
       name: name,
       email: email,
       hash: hash,
     };
-    this.userRepository.save(record);
+    const usedUserName = await this.userRepository.findOne({
+      where: {
+        name: Equal(name),
+      },
+    });
+    const usedUserEmail = await this.userRepository.findOne({
+      where: {
+        email: Equal(email),
+      },
+    });
+    if (usedUserName || usedUserEmail) {
+      throw new ConflictException();
+    } else {
+      this.userRepository.save(record);
+    }
   }
 
   // GETリクエストに対して作成
