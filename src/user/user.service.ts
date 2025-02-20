@@ -55,14 +55,16 @@ export class UserService {
 
     if (usedUserName) {
       // throw new ConflictException('このユーザー名はすでに使用されています。');
-      throw new BadRequestException();
+      throw new BadRequestException('このユーザー名はすでに使用されています．');
     }
 
     if (usedUserEmail) {
       // throw new ConflictException(
       //   'このメールアドレスはすでに使用されています．',
       // );
-      throw new BadRequestException();
+      throw new BadRequestException(
+        'このメールアドレスはすでに使用されています．',
+      );
     }
 
     // ユーザー情報を保存
