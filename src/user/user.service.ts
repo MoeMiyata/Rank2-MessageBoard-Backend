@@ -37,6 +37,7 @@ export class UserService {
       email: email,
       hash: hash,
     };
+
     const usedUserName = await this.userRepository.findOne({
       where: {
         name: Equal(name),
@@ -47,13 +48,18 @@ export class UserService {
         email: Equal(email),
       },
     });
-    if (usedUserName || usedUserEmail) {
-      console.log('usedUserName:', usedUserName);
-      console.log('usedUserEmail:', usedUserEmail);
-      throw new ConflictException();
-    } else {
-      this.userRepository.save(record);
+    if (usedUserName) {
+      throw new ConflictException('このユーザー名はすでに使用されています。');
     }
+
+    if (usedUserEmail) {
+      throw new ConflictException(
+        'このメールアドレスはすでに使用されています．',
+      );
+    }
+
+    // ユーザー情報を保存
+    await this.userRepository.save(record);
   }
 
   // GETリクエストに対して作成
