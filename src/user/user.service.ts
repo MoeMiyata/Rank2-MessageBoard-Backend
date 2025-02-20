@@ -48,6 +48,8 @@ export class UserService {
       },
     });
     if (usedUserName || usedUserEmail) {
+      console.log('usedUserName:', usedUserName);
+      console.log('usedUserEmail:', usedUserEmail);
       throw new ConflictException();
     } else {
       this.userRepository.save(record);
