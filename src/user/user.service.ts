@@ -54,14 +54,10 @@ export class UserService {
     console.log('usedUserEmail:', usedUserEmail);
 
     if (usedUserName) {
-      // throw new ConflictException('このユーザー名はすでに使用されています。');
       throw new BadRequestException('このユーザー名はすでに使用されています．');
     }
 
     if (usedUserEmail) {
-      // throw new ConflictException(
-      //   'このメールアドレスはすでに使用されています．',
-      // );
       throw new BadRequestException(
         'このメールアドレスはすでに使用されています．',
       );
