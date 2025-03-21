@@ -104,7 +104,7 @@ export class UserService {
     id: number,
     name?: string,
     email?: string,
-    hash?: string,
+    password?: string,
     birthday?: Date,
     address?: string,
     tel?: string,
@@ -112,17 +112,17 @@ export class UserService {
     console.log('In updateUser');
 
     // ログイン済みかチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
+    // const now = new Date();
+    // const auth = await this.authRepository.findOne({
+    //   where: {
+    //     token: Equal(token),
+    //     expire_at: MoreThan(now),
+    //   },
+    // });
 
-    if (!auth) {
-      throw new ForbiddenException();
-    }
+    // if (!auth) {
+    //   throw new ForbiddenException();
+    // }
 
     const user = await this.userRepository.findOne({
       where: {
@@ -130,9 +130,9 @@ export class UserService {
       },
     });
 
-    if (!user) {
-      throw new NotFoundException();
-    }
+    // if (!user) {
+    //   throw new NotFoundException();
+    // }
 
     console.log('user(updateUser):', user); //編集するユーザ情報を持ってきた
 
@@ -145,8 +145,8 @@ export class UserService {
     if (email !== undefined) {
       updateData.email = email;
     }
-    if (hash !== undefined) {
-      updateData.hash = hash;
+    if (password !== undefined) {
+      updateData.hash = createHash('md5').update(password).digest('hex');
     }
     if (birthday !== undefined) {
       // updateData.birthday = new Date(birthday);
