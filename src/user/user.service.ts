@@ -96,4 +96,68 @@ export class UserService {
 
     return user;
   }
+
+  // ユーザ情報の編集で追加
+  // PUTリクエストに対して作成
+  async updateUser(
+    token: string,
+    id: number,
+    name?: string,
+    email?: string,
+    password?: string,
+    birthday?: Date,
+    address?: string,
+    tel?: string,
+  ) {
+    // ログイン済みかチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    const user = await this.userRepository.findOne({
+      where: {
+        id: Equal(id),
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    console.log('user(getUser):', user); //編集するユーザ情報を持ってきた
+
+    // 更新するデータ（undefined のプロパティを削除）
+    const updateData: Partial<User> = {};
+
+    if (name !== undefined) {
+      updateData.name = name;
+    }
+    if (email !== undefined) {
+      updateData.email = email;
+    }
+    if (password !== undefined) {
+      updateData.hash = createHash('md5').update(password).digest('hex');
+    }
+    if (birthday !== undefined) {
+      // updateData.birthday = new Date(birthday);
+      updateData.birthday = birthday;
+    }
+    if (address !== undefined) {
+      updateData.address = address;
+    }
+    if (tel !== undefined) {
+      updateData.tel = tel;
+    }
+
+    // ユーザー情報を保存
+    await this.userRepository.update(id, updateData);
+  }
 }
