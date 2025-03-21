@@ -32,6 +32,7 @@ export class UserController {
     @Body('address') address: string,
     @Body('tel') tel: string,
   ) {
+    console.log('In back PUT(updateUser)');
     return await this.userService.updateUser(
       token,
       id,

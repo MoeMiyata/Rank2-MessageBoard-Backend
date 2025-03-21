@@ -109,6 +109,8 @@ export class UserService {
     address?: string,
     tel?: string,
   ) {
+    console.log('In updateUser');
+
     // ログイン済みかチェック
     const now = new Date();
     const auth = await this.authRepository.findOne({
