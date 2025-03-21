@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Equal, MoreThan, UpdateDateColumn } from 'typeorm';
+import { Repository, Equal, MoreThan } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Auth } from '../entities/auth.entity';
 
