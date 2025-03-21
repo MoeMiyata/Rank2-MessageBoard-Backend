@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Equal, MoreThan } from 'typeorm';
+import { Repository, Equal, MoreThan, UpdateDateColumn } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Auth } from '../entities/auth.entity';
 
@@ -132,7 +132,7 @@ export class UserService {
       throw new NotFoundException();
     }
 
-    console.log('user(getUser):', user); //編集するユーザ情報を持ってきた
+    console.log('user(updateUser):', user); //編集するユーザ情報を持ってきた
 
     // 更新するデータ（undefined のプロパティを削除）
     const updateData: Partial<User> = {};
@@ -156,6 +156,8 @@ export class UserService {
     if (tel !== undefined) {
       updateData.tel = tel;
     }
+
+    console.log('updateData(updateUser):', updateData); //編集するユーザ情報を持ってきた
 
     // ユーザー情報を保存
     await this.userRepository.update(id, updateData);
