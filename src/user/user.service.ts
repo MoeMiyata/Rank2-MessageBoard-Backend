@@ -111,18 +111,18 @@ export class UserService {
   ) {
     console.log('In updateUser');
 
-    // ログイン済みかチェック
-    // const now = new Date();
-    // const auth = await this.authRepository.findOne({
-    //   where: {
-    //     token: Equal(token),
-    //     expire_at: MoreThan(now),
-    //   },
-    // });
+    //ログイン済みかチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
 
-    // if (!auth) {
-    //   throw new ForbiddenException();
-    // }
+    if (!auth) {
+      throw new ForbiddenException();
+    }
 
     const user = await this.userRepository.findOne({
       where: {
@@ -130,9 +130,9 @@ export class UserService {
       },
     });
 
-    // if (!user) {
-    //   throw new NotFoundException();
-    // }
+    if (!user) {
+      throw new NotFoundException();
+    }
 
     console.log('user(updateUser):', user); //編集するユーザ情報を持ってきた
 
