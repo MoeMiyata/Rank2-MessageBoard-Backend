@@ -149,8 +149,8 @@ export class UserService {
     //   updateData.hash = createHash('md5').update(password).digest('hex');
     // }
     if (birthday !== undefined) {
-      // updateData.birthday = new Date(birthday);
-      updateData.birthday = birthday;
+      updateData.birthday = new Date(birthday);
+      // updateData.birthday = birthday;
     }
     if (address !== undefined) {
       updateData.address = address;
