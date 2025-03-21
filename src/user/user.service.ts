@@ -104,7 +104,7 @@ export class UserService {
     id: number,
     name?: string,
     email?: string,
-    password?: string,
+    hash?: string,
     birthday?: Date,
     address?: string,
     tel?: string,
@@ -145,8 +145,8 @@ export class UserService {
     if (email !== undefined) {
       updateData.email = email;
     }
-    if (password !== undefined) {
-      updateData.hash = createHash('md5').update(password).digest('hex');
+    if (hash !== undefined) {
+      updateData.hash = hash;
     }
     if (birthday !== undefined) {
       // updateData.birthday = new Date(birthday);
