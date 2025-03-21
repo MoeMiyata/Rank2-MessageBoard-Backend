@@ -20,7 +20,7 @@ export class UserController {
   }
 
   // ユーザ情報の編集で追加
-  @Put()
+  @Put(':id')
   async updateUser(
     @Param('id') id: number,
     @Query('token') token: string,
