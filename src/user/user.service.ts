@@ -156,7 +156,7 @@ export class UserService {
     if (birthday !== undefined) {
       console.log('birthday:', birthday); // birthdayの型等を確認
       // updateData.birthday = new Date(birthday);
-      // updateData.birthday = birthday;
+      updateData.birthday = birthday;
     }
     if (address !== undefined) {
       updateData.address = address;
