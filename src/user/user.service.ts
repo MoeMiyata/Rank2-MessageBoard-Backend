@@ -142,7 +142,7 @@ export class UserService {
     console.log('updateData:', updateData);
 
     if (name && name !== '') {
-      console.log('in name:');
+      console.log('in name:', name);
       const usedUserName = await this.userRepository.findOne({
         where: {
           name: Equal(name),
@@ -153,10 +153,10 @@ export class UserService {
           'このユーザー名はすでに使用されています．',
         );
       }
-      updateData.name = name;
+      // updateData.name = name;
     }
     if (email && email !== '') {
-      console.log('in email:');
+      console.log('in email:', email);
       const usedUserEmail = await this.userRepository.findOne({
         where: {
           email: Equal(email),
@@ -167,7 +167,7 @@ export class UserService {
           'このメールアドレスはすでに使用されています．',
         );
       }
-      updateData.email = email;
+      // updateData.email = email;
     }
     if (password && password !== '') {
       // 空文字の時も登録しない
