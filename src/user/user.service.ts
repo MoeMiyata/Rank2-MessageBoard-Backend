@@ -105,7 +105,8 @@ export class UserService {
     name?: string,
     email?: string,
     password?: string,
-    birthday?: Date,
+    // birthday?: Date,
+    birthday?: string,
     address?: string,
     tel?: string,
   ) {
@@ -178,7 +179,7 @@ export class UserService {
       );
       updateData.hash = createHash('md5').update(password).digest('hex');
     }
-    if (birthday !== undefined) {
+    if (birthday && birthday !== '') {
       console.log('birthday:', birthday); // birthdayの型等を確認
       updateData.birthday = birthday;
     }

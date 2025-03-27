@@ -28,7 +28,8 @@ export class UserController {
     @Body('name') name: string,
     @Body('email') email: string,
     @Body('password') password: string,
-    @Body('birthday') birthday: Date,
+    // @Body('birthday') birthday: Date,
+    @Body('birthday') birthday: string,
     @Body('address') address: string,
     @Body('tel') tel: string,
   ) {

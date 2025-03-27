@@ -31,7 +31,7 @@ export class User {
 
   // ユーザ情報の編集で追加
   @Column({ type: 'date', nullable: true })
-  birthday?: Date | undefined;
+  birthday?: string | undefined;
 
   @Column({ type: 'varchar', default: '登録なし' })
   address?: string;
