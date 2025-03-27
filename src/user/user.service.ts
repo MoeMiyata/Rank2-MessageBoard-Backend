@@ -142,7 +142,7 @@ export class UserService {
 
     console.log('updateData:', updateData);
 
-    if (name && name !== '') {
+    if (name && name.trim() !== '') {
       console.log('in name:', name);
       const usedUserName = await this.userRepository.findOne({
         where: {
@@ -156,7 +156,7 @@ export class UserService {
       }
       // updateData.name = name;
     }
-    if (email && email !== '') {
+    if (email && email.trim() !== '') {
       console.log('in email:', email);
       const usedUserEmail = await this.userRepository.findOne({
         where: {
@@ -170,7 +170,7 @@ export class UserService {
       }
       // updateData.email = email;
     }
-    if (password && password !== '') {
+    if (password && password.trim() !== '') {
       // 空文字の時も登録しない
       console.log('in updateUser(password):', password);
       console.log(
@@ -183,11 +183,11 @@ export class UserService {
       console.log('birthday:', birthday); // birthdayの型等を確認
       updateData.birthday = birthday;
     }
-    if (address && address !== '') {
+    if (address && address.trim() !== '') {
       console.log('in address:');
       updateData.address = address;
     }
-    if (tel && tel !== '') {
+    if (tel && tel.trim() !== '') {
       console.log('in tel:');
       updateData.tel = tel;
     }
