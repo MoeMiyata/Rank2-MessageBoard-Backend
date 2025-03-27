@@ -182,11 +182,11 @@ export class UserService {
       console.log('birthday:', birthday); // birthdayの型等を確認
       updateData.birthday = birthday;
     }
-    if (address && address != '') {
+    if (address && address !== '') {
       console.log('in address:');
       updateData.address = address;
     }
-    if (tel && tel != '') {
+    if (tel && tel !== '') {
       console.log('in tel:');
       updateData.tel = tel;
     }
