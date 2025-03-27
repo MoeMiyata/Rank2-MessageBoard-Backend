@@ -151,7 +151,6 @@ export class UserService {
     }
     if (password && password !== '') {
       // 空文字の時も登録しない
-      // updateData.hash = createHash('md5').update(password).digest('hex');
       console.log('in updateUser(password):', password);
       console.log(
         'new pass',
@@ -161,7 +160,6 @@ export class UserService {
     }
     if (birthday !== undefined) {
       console.log('birthday:', birthday); // birthdayの型等を確認
-      // updateData.birthday = new Date(birthday);
       updateData.birthday = birthday;
     }
     if (address && address != '') {
