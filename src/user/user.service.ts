@@ -142,9 +142,11 @@ export class UserService {
     console.log('updateData:', updateData);
 
     if (name !== undefined && name !== '') {
+      console.log('in name:');
       updateData.name = name;
     }
     if (email !== undefined && email !== '') {
+      console.log('in email:');
       updateData.email = email;
     }
     if (password !== undefined && password !== '') {
@@ -162,9 +164,11 @@ export class UserService {
       updateData.birthday = birthday;
     }
     if (address !== undefined && address != '') {
+      console.log('in address:');
       updateData.address = address;
     }
     if (tel !== undefined && tel != '') {
+      console.log('in tel:');
       updateData.tel = tel;
     }
 
