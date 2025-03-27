@@ -139,10 +139,12 @@ export class UserService {
     // 更新するデータ（undefined のプロパティを削除）
     const updateData: Partial<User> = {};
 
-    if (name !== undefined) {
+    console.log('updateData:', updateData);
+
+    if (name !== undefined && name !== '') {
       updateData.name = name;
     }
-    if (email !== undefined) {
+    if (email !== undefined && email !== '') {
       updateData.email = email;
     }
     if (password !== undefined && password !== '') {
@@ -159,10 +161,10 @@ export class UserService {
       // updateData.birthday = new Date(birthday);
       updateData.birthday = birthday;
     }
-    if (address !== undefined) {
+    if (address !== undefined && address != '') {
       updateData.address = address;
     }
-    if (tel !== undefined) {
+    if (tel !== undefined && tel != '') {
       updateData.tel = tel;
     }
 
