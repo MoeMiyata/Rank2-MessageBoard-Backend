@@ -143,10 +143,30 @@ export class UserService {
 
     if (name && name !== '') {
       console.log('in name:');
+      const usedUserName = await this.userRepository.findOne({
+        where: {
+          name: Equal(name),
+        },
+      });
+      if (usedUserName) {
+        throw new BadRequestException(
+          'このユーザー名はすでに使用されています．',
+        );
+      }
       updateData.name = name;
     }
     if (email && email !== '') {
       console.log('in email:');
+      const usedUserEmail = await this.userRepository.findOne({
+        where: {
+          email: Equal(email),
+        },
+      });
+      if (usedUserEmail) {
+        throw new BadRequestException(
+          'このメールアドレスはすでに使用されています．',
+        );
+      }
       updateData.email = email;
     }
     if (password && password !== '') {
