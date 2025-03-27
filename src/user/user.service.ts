@@ -145,7 +145,7 @@ export class UserService {
     if (email !== undefined) {
       updateData.email = email;
     }
-    if (password !== undefined || password !== '') {
+    if (password !== undefined && password !== '') {
       // 空文字の時も登録しない
       // updateData.hash = createHash('md5').update(password).digest('hex');
       console.log('in updateUser(password):', password);
