@@ -149,7 +149,7 @@ export class UserService {
       console.log('in email:');
       updateData.email = email;
     }
-    if (password !== undefined && password !== '') {
+    if (password && password !== '') {
       // 空文字の時も登録しない
       // updateData.hash = createHash('md5').update(password).digest('hex');
       console.log('in updateUser(password):', password);
@@ -163,7 +163,7 @@ export class UserService {
       // updateData.birthday = new Date(birthday);
       updateData.birthday = birthday;
     }
-    if (address && address != '') {
+    if (address && address.trim() != '') {
       console.log('in address:');
       updateData.address = address;
     }
