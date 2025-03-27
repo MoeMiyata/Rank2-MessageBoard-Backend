@@ -141,11 +141,11 @@ export class UserService {
 
     console.log('updateData:', updateData);
 
-    if (name !== undefined && name !== '') {
+    if (name && name !== '') {
       console.log('in name:');
       updateData.name = name;
     }
-    if (email !== undefined && email !== '') {
+    if (email && email !== '') {
       console.log('in email:');
       updateData.email = email;
     }
@@ -163,11 +163,11 @@ export class UserService {
       // updateData.birthday = new Date(birthday);
       updateData.birthday = birthday;
     }
-    if (address !== undefined && address != '') {
+    if (address && address != '') {
       console.log('in address:');
       updateData.address = address;
     }
-    if (tel !== undefined && tel != '') {
+    if (tel && tel != '') {
       console.log('in tel:');
       updateData.tel = tel;
     }
