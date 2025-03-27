@@ -38,4 +38,11 @@ export class User {
 
   @Column({ type: 'varchar', default: '登録なし' })
   tel?: string;
+
+  @Column({
+    type: 'varchar',
+    default:
+      'https://github.com/MoeMiyata/Rank2-MessageBoard-Frontend/blob/main/public/profileicon_default.png?raw=true',
+  })
+  imgSrc?: string;
 }

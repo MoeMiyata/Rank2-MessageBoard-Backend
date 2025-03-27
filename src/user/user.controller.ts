@@ -32,6 +32,7 @@ export class UserController {
     @Body('birthday') birthday: string,
     @Body('address') address: string,
     @Body('tel') tel: string,
+    @Body('imgSrc') imgSrc: string,
   ) {
     console.log('In back PUT(updateUser)');
     return await this.userService.updateUser(
@@ -43,6 +44,7 @@ export class UserController {
       birthday,
       address,
       tel,
+      imgSrc,
     );
   }
 }

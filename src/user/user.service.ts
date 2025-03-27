@@ -109,6 +109,7 @@ export class UserService {
     birthday?: string,
     address?: string,
     tel?: string,
+    imgSrc?: string,
   ) {
     console.log('In updateUser');
 
@@ -190,6 +191,10 @@ export class UserService {
     if (tel && tel.trim() !== '') {
       console.log('in tel:');
       updateData.tel = tel;
+    }
+    if (imgSrc && imgSrc.trim() !== '') {
+      console.log('in img_src:');
+      updateData.imgSrc = imgSrc;
     }
 
     console.log('updateData(updateUser):', updateData); //編集するユーザ情報を持ってきた
