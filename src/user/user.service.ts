@@ -145,7 +145,8 @@ export class UserService {
     if (email !== undefined) {
       updateData.email = email;
     }
-    if (password !== undefined) {
+    if (password !== undefined || '') {
+      // 空文字の時も登録しない
       // updateData.hash = createHash('md5').update(password).digest('hex');
       console.log(
         'new pass',
@@ -153,7 +154,8 @@ export class UserService {
       );
     }
     if (birthday !== undefined) {
-      updateData.birthday = new Date(birthday);
+      console.log('birthday:', birthday); // birthdayの型等を確認
+      // updateData.birthday = new Date(birthday);
       // updateData.birthday = birthday;
     }
     if (address !== undefined) {
