@@ -157,13 +157,14 @@ export class UserService {
         'new pass',
         (updateData.hash = createHash('md5').update(password).digest('hex')),
       );
+      updateData.hash = createHash('md5').update(password).digest('hex');
     }
     if (birthday !== undefined) {
       console.log('birthday:', birthday); // birthdayの型等を確認
       // updateData.birthday = new Date(birthday);
       updateData.birthday = birthday;
     }
-    if (address && address.trim() != '') {
+    if (address && address != '') {
       console.log('in address:');
       updateData.address = address;
     }
