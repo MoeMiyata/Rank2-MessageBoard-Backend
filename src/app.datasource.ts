@@ -17,10 +17,10 @@ const AppDataSource = new DataSource({
   // password: 'miyatamoe',
   // database: 'postgres',
   // 以下デプロイ用
-  host: 'dpg-cvecbeofnakc738d89h0-a',
+  host: 'dpg-d04p49hr0fns73cn6nr0-a',
   username: 'two_six',
-  password: 'yukFiL9HrbbJpuIY4vpUYsDQ0t1rZtvr',
-  database: 'postgresql_na6p',
+  password: 'V5cINw6eytJN74vo2GKpf1BVolmQk76n',
+  database: 'rank2_postgres_lqeb',
   entities: ['src/entities/*.ts'], //  エンティティファイル（後述）配列
   migrations: ['src/migrations/*.ts'], // マイグレーションファイル（後述）配列
 });

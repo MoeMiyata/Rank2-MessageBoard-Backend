@@ -24,10 +24,10 @@ import { MainController } from './main/main.controller';
       // password: process.env.DB_PASS,
       // database: process.env.DB_NAME,
       // 以下デプロイ用
-      host: 'dpg-cvecbeofnakc738d89h0-a',
+      host: 'dpg-d04p49hr0fns73cn6nr0-a',
       username: 'two_six',
-      password: 'yukFiL9HrbbJpuIY4vpUYsDQ0t1rZtvr',
-      database: 'postgresql_na6p',
+      password: 'V5cINw6eytJN74vo2GKpf1BVolmQk76n',
+      database: 'rank2_postgres_lqeb',
 
       autoLoadEntities: true,
       synchronize: false,
