@@ -115,7 +115,7 @@ export class UserService {
     console.log('token:', token);
 
     const icons = await this.userRepository.find({
-      select: ['id', 'imgSrc'],
+      select: ['name', 'imgSrc'],
     });
     return icons;
   }
