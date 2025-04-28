@@ -14,9 +14,16 @@ export class UserController {
     return await this.userService.createUser(name, email, password);
   }
 
+  // ユーザ情報取得
   @Get(':id')
   async getUser(@Param('id') id: number, @Query('token') token: string) {
     return await this.userService.getUser(token, id);
+  }
+
+  // ユーザのicon情報取得
+  @Get('icons')
+  async getUserIcons(@Query('token') token: string) {
+    return await this.userService.getUserIcon(token);
   }
 
   // ユーザ情報の編集で追加

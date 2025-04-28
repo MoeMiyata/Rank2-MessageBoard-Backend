@@ -67,7 +67,7 @@ export class UserService {
     await this.userRepository.save(record);
   }
 
-  // GETリクエストに対して作成
+  // GETリクエストに対して作成（ユーザ情報の取得）
   async getUser(token: string, id: number) {
     // ログイン済みかチェック
     const now = new Date();
@@ -95,6 +95,27 @@ export class UserService {
     console.log('user(getUser):', user);
 
     return user;
+  }
+
+  // GETリクエストに対して作成（アイコン情報の取得）
+  async getUserIcon(token: string) {
+    // ログイン済みかチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    const icons = await this.userRepository.find({
+      select: ['id', 'imgSrc'],
+    });
+    return icons;
   }
 
   // ユーザ情報の編集で追加
