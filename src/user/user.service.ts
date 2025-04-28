@@ -155,7 +155,7 @@ export class UserService {
           'このユーザー名はすでに使用されています．',
         );
       }
-      // updateData.name = name;
+      updateData.name = name;
     }
     if (email && email.trim() !== '') {
       console.log('in email:', email);
@@ -169,7 +169,7 @@ export class UserService {
           'このメールアドレスはすでに使用されています．',
         );
       }
-      // updateData.email = email;
+      updateData.email = email;
     }
     if (password && password.trim() !== '') {
       // 空文字の時も登録しない
