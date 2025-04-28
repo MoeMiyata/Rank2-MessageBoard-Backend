@@ -98,8 +98,9 @@ export class UserService {
   }
 
   // GETリクエストに対して作成（アイコン情報の取得）
-  async getUserIcon(token: string) {
+  async getUserIcons(token: string) {
     // ログイン済みかチェック
+    console.log('token(getUserIcons):', token);
     const now = new Date();
     const auth = await this.authRepository.findOne({
       where: {

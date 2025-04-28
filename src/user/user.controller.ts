@@ -21,9 +21,9 @@ export class UserController {
   }
 
   // ユーザのicon情報取得
-  @Get('icons')
+  @Get()
   async getUserIcons(@Query('token') token: string) {
-    return await this.userService.getUserIcon(token);
+    return await this.userService.getUserIcons(token);
   }
 
   // ユーザ情報の編集で追加
