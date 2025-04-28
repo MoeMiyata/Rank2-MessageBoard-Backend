@@ -99,19 +99,19 @@ export class UserService {
 
   // GETリクエストに対して作成（アイコン情報の取得）
   async getUserIcons(token: string) {
-    // // ログイン済みかチェック
-    // console.log('token(getUserIcons):', token);
-    // const now = new Date();
-    // const auth = await this.authRepository.findOne({
-    //   where: {
-    //     token: Equal(token),
-    //     expire_at: MoreThan(now),
-    //   },
-    // });
+    // ログイン済みかチェック
+    console.log('token(getUserIcons):', token);
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
 
-    // if (!auth) {
-    //   throw new ForbiddenException();
-    // }
+    if (!auth) {
+      throw new ForbiddenException();
+    }
     console.log('token:', token);
 
     const icons = await this.userRepository.find({
