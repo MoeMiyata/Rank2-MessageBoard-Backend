@@ -1,4 +1,8 @@
-import { Injectable, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Equal, MoreThan } from 'typeorm';
 import { MicroPost } from '../entities/microposts.entity';
@@ -105,5 +109,48 @@ export class PostService {
     }
 
     await this.microPostsRepository.delete({ id: deleteid });
+  }
+
+  // PUTリクエストに対して作成
+  async updatePost(token: string, id: number, content: string) {
+    console.log('In updatePost');
+
+    //ログイン済みかチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    const post = await this.microPostsRepository.findOne({
+      where: {
+        id: Equal(id),
+      },
+    });
+
+    if (!post) {
+      throw new NotFoundException();
+    }
+
+    console.log('user(updatePost):', post); //編集するユーザ情報を持ってきた
+
+    // 更新するデータ（undefined のプロパティを削除）
+    const updateData: Partial<MicroPost> = {};
+
+    console.log('updateData:', updateData);
+
+    if (content !== '') {
+      updateData.content = content;
+    }
+    console.log('updateData(updatePost):', updateData); //編集するユーザ情報を持ってきた
+
+    // ユーザー情報を保存
+    await this.microPostsRepository.update(id, updateData);
   }
 }
