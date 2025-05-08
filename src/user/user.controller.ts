@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Param, Query, Body, Put } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Query,
+  Body,
+  Put,
+  Delete,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -35,7 +44,6 @@ export class UserController {
     @Body('name') name: string,
     @Body('email') email: string,
     @Body('password') password: string,
-    // @Body('birthday') birthday: Date,
     @Body('birthday') birthday: string,
     @Body('address') address: string,
     @Body('tel') tel: string,
@@ -53,5 +61,13 @@ export class UserController {
       tel,
       imgSrc,
     );
+  }
+
+  @Delete()
+  async deleteUser(
+    @Query('token') token: string,
+    @Query('user_id') user_id: number,
+  ) {
+    return await this.userService.deleteUser(token, user_id);
   }
 }

@@ -128,7 +128,6 @@ export class UserService {
     name?: string,
     email?: string,
     password?: string,
-    // birthday?: Date,
     birthday?: string,
     address?: string,
     tel?: string,
@@ -224,5 +223,23 @@ export class UserService {
 
     // ユーザー情報を保存
     await this.userRepository.update(id, updateData);
+  }
+
+  // DELETEリクエストに対して作成
+  async deleteUser(token: string, user_id: number) {
+    // ログイン済みかチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
+    await this.userRepository.delete({ id: user_id });
   }
 }
