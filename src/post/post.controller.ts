@@ -6,7 +6,7 @@ import {
   Query,
   Delete,
   Put,
-  Param,
+  // Param,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 
@@ -38,14 +38,16 @@ export class PostController {
   }
 
   // ユーザ情報の編集で追加
-  @Put(':id')
+  // @Put(':id')
+  @Put()
   async updatPost(
-    @Param('id') id: number,
     @Query('token') token: string,
+    @Query('id') id: number,
 
     @Body('content') content: string,
   ) {
     console.log('In back PUT(updateUser)');
+    // return await this.postService.updatePost(token, id, content);
     return await this.postService.updatePost(token, id, content);
   }
 }
