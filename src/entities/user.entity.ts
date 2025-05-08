@@ -12,7 +12,8 @@ import {
 @Unique(['email']) // emailが一意であることを保証
 export class User {
   @PrimaryGeneratedColumn()
-  readonly id: number;
+  // readonly id: number;
+  id: number;
 
   @Column('varchar')
   name: string;
