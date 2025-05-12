@@ -138,7 +138,7 @@ export class PostService {
       throw new NotFoundException();
     }
 
-    console.log('user(updatePost):', post); //編集するユーザ情報を持ってきた
+    console.log('post(updatePost):', post); //編集するユーザ情報を持ってきた
 
     // 更新するデータ（undefined のプロパティを削除）
     const updateData: Partial<MicroPost> = {};
