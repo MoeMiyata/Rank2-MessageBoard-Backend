@@ -14,13 +14,27 @@ import { UserService } from './user.service';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  async createUser(
+  // @Post()
+  // async createUser(
+  //   @Body('name') name: string,
+  //   @Body('email') email: string,
+  //   @Body('password') password: string,
+  // ) {
+  //   return await this.userService.createUser(name, email, password);
+  // }
+
+  @Post('request-verification')
+  async requestVerification(
     @Body('name') name: string,
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    return await this.userService.createUser(name, email, password);
+    return this.userService.requestEmailVerification(name, email, password);
+  }
+
+  @Get('verify-email')
+  async verifyEmail(@Query('token') token: string) {
+    return this.userService.verifyAndCreateUser(token);
   }
 
   // ユーザ情報取得

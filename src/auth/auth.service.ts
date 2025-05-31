@@ -59,7 +59,7 @@ export class AuthService {
       // 更新
       auth.expire_at = expire;
       await this.authRepository.save(auth);
-      ret.token = auth.token;
+      ret.token = auth.token; ////////////////////// 期限切れならここもtokenを新しく生成して更新した方が良いのでは？
     } else {
       // 挿入
       const token = crypto.randomUUID();

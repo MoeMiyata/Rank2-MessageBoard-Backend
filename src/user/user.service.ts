@@ -11,6 +11,9 @@ import { Repository, Equal, MoreThan } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Auth } from '../entities/auth.entity';
 
+import { JwtService } from '@nestjs/jwt';
+import { MailService } from '../mail/mail.service';
+
 @Injectable()
 export class UserService {
   constructor(
@@ -19,53 +22,106 @@ export class UserService {
 
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
+
+    private readonly jwtService: JwtService, // ← これを追加
+    private readonly mailService: MailService, // ← これを追加！
   ) {}
 
-  // POSTリクエストに対して作成
-  // createUser(name: string, email: string, password: string) {
+  async requestEmailVerification(
+    name: string,
+    email: string,
+    password: string,
+  ) {
+    const usedName = await this.userRepository.findOne({ where: { name } });
+    const usedEmail = await this.userRepository.findOne({ where: { email } });
+
+    if (usedName)
+      throw new BadRequestException('このユーザー名は既に使われています');
+    if (usedEmail)
+      throw new BadRequestException('このメールアドレスは既に登録済みです');
+
+    const token = this.jwtService.sign(
+      { name, email, password },
+      { expiresIn: '15m' },
+    );
+
+    const verifyUrl = `https://rank2-messageboard-frontend.onrender.com/verify-email?token=${token}`;
+    console.log(verifyUrl);
+
+    await this.mailService.sendMail(
+      email,
+      '【認証】メールアドレス確認',
+      `以下のリンクから登録を完了してください：\n${verifyUrl}`,
+    );
+
+    return { message: '確認メールを送信しました。' };
+  }
+
+  async verifyAndCreateUser(token: string) {
+    try {
+      const payload = this.jwtService.verify(token);
+
+      const usedEmail = await this.userRepository.findOne({
+        where: { email: payload.email },
+      });
+      if (usedEmail) {
+        throw new BadRequestException(
+          'このメールアドレスは既に登録されています',
+        );
+      }
+
+      const hash = createHash('md5').update(payload.password).digest('hex');
+      const newUser = {
+        name: payload.name,
+        email: payload.email,
+        hash: hash,
+      };
+
+      await this.userRepository.save(newUser);
+
+      return { message: 'ユーザー登録が完了しました。' };
+    } catch (err) {
+      throw new BadRequestException('無効または期限切れのトークンです');
+      console.error('エラー:', err);
+    }
+  }
+
+  // // POSTリクエストに対して作成
+  // async createUser(name: string, email: string, password: string) {
   //   const hash = createHash('md5').update(password).digest('hex');
   //   const record = {
   //     name: name,
   //     email: email,
   //     hash: hash,
   //   };
-  //   this.userRepository.save(record);
+
+  //   const usedUserName = await this.userRepository.findOne({
+  //     where: {
+  //       name: Equal(name),
+  //     },
+  //   });
+  //   const usedUserEmail = await this.userRepository.findOne({
+  //     where: {
+  //       email: Equal(email),
+  //     },
+  //   });
+
+  //   console.log('usedUserName:', usedUserName);
+  //   console.log('usedUserEmail:', usedUserEmail);
+
+  //   if (usedUserName) {
+  //     throw new BadRequestException('このユーザー名はすでに使用されています．');
+  //   }
+
+  //   if (usedUserEmail) {
+  //     throw new BadRequestException(
+  //       'このメールアドレスはすでに使用されています．',
+  //     );
+  //   }
+
+  //   // ユーザー情報を保存
+  //   await this.userRepository.save(record);
   // }
-  async createUser(name: string, email: string, password: string) {
-    const hash = createHash('md5').update(password).digest('hex');
-    const record = {
-      name: name,
-      email: email,
-      hash: hash,
-    };
-
-    const usedUserName = await this.userRepository.findOne({
-      where: {
-        name: Equal(name),
-      },
-    });
-    const usedUserEmail = await this.userRepository.findOne({
-      where: {
-        email: Equal(email),
-      },
-    });
-
-    console.log('usedUserName:', usedUserName);
-    console.log('usedUserEmail:', usedUserEmail);
-
-    if (usedUserName) {
-      throw new BadRequestException('このユーザー名はすでに使用されています．');
-    }
-
-    if (usedUserEmail) {
-      throw new BadRequestException(
-        'このメールアドレスはすでに使用されています．',
-      );
-    }
-
-    // ユーザー情報を保存
-    await this.userRepository.save(record);
-  }
 
   // GETリクエストに対して作成（ユーザ情報の取得）
   async getUser(token: string, id: number) {

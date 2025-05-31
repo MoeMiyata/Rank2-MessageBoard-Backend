@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import { Controller, Get, Redirect } from '@nestjs/common';
 
 @Controller()
