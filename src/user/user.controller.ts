@@ -32,7 +32,7 @@ export class UserController {
     return this.userService.requestEmailVerification(name, email, password);
   }
 
-  @Post('verify')
+  @Post('verify-email')
   async verifyAndCreateUser(@Body() body: { token: string }) {
     return this.userService.verifyAndCreateUser(body.token);
   }
