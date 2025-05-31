@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config(); // ← 一番最初に呼び出す！
+
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 // import * as path from 'path';
