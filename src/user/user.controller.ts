@@ -32,9 +32,9 @@ export class UserController {
     return this.userService.requestEmailVerification(name, email, password);
   }
 
-  @Get('verify-email')
-  async verifyEmail(@Query('token') token: string) {
-    return this.userService.verifyAndCreateUser(token);
+  @Post('verify')
+  async verifyAndCreateUser(@Body() body: { token: string }) {
+    return this.userService.verifyAndCreateUser(body.token);
   }
 
   // ユーザ情報取得
