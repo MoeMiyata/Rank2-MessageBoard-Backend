@@ -51,7 +51,7 @@ export class MailService {
   async sendMail(to: string, subject: string, content: string): Promise<void> {
     try {
       const result = await this.resend.emails.send({
-        from: 'onboarding@resend.dev', // Resendで検証済みのドメインが必要
+        from: 'MicroPost@resend.dev', // Resendで検証済みのドメインが必要
         to,
         subject,
         html: `<p>${content}</p>`,
