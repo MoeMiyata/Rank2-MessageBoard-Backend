@@ -151,6 +151,36 @@ export class UserService {
   //   await this.userRepository.save(record);
   // }
 
+  async requestChangePassword(name: string, email: string) {
+    const user = await this.userRepository.findOne({ where: { name, email } });
+    if (!user) {
+      throw new BadRequestException('指定されたユーザーが存在しません');
+    }
+
+    const token = this.jwtService.sign({ name, email }, { expiresIn: '15m' });
+
+    await this.tokenRepository.save({
+      email,
+      token,
+      expire_at: new Date(Date.now() + 15 * 60 * 1000),
+    });
+
+    const verifyUrl = `https://rank2-messageboard-frontend.onrender.com/change-password?token=${token}`;
+    console.log(verifyUrl);
+
+    await this.mailService.sendMail(
+      email,
+      '【重要】パスワード再設定のお願い',
+      `${name}様<br><br>
+      以下のURLからパスワードを再設定してください。<br><br>
+      <a href="${verifyUrl}" target="_blank">${verifyUrl}</a><br><br>
+      ※このURLは15分間のみ有効です。<br><br>
+      MicroPost運営チーム`,
+    );
+
+    return { message: '再設定メールを送信しました。' };
+  }
+
   // GETリクエストに対して作成（ユーザ情報の取得）
   async getUser(token: string, id: number) {
     // ログイン済みかチェック
