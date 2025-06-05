@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Equal, MoreThan } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Auth } from '../entities/auth.entity';
+import { Token } from '../entities/token.entity';
 
 import { JwtService } from '@nestjs/jwt';
 import { MailService } from '../mail/mail.service';
@@ -23,6 +24,9 @@ export class UserService {
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
 
+    @InjectRepository(Token)
+    private tokenRepository: Repository<Token>,
+
     private readonly jwtService: JwtService, // ← これを追加
     private readonly mailService: MailService, // ← これを追加！
   ) {}
@@ -31,6 +35,7 @@ export class UserService {
     name: string,
     email: string,
     password: string,
+    ip?: string,
   ) {
     const usedName = await this.userRepository.findOne({ where: { name } });
     const usedEmail = await this.userRepository.findOne({ where: { email } });
@@ -44,6 +49,13 @@ export class UserService {
       { name, email, password },
       { expiresIn: '15m' },
     );
+
+    await this.tokenRepository.save({
+      email,
+      token,
+      expire_at: new Date(Date.now() + 15 * 60 * 1000),
+      ip,
+    });
 
     const verifyUrl = `https://rank2-messageboard-frontend.onrender.com/verify-email?token=${token}`;
     console.log(verifyUrl);
@@ -62,6 +74,13 @@ export class UserService {
   }
 
   async verifyAndCreateUser(token: string) {
+    const record = await this.tokenRepository.findOne({ where: { token } });
+    if (!record || record.used || record.expire_at < new Date()) {
+      throw new BadRequestException(
+        '無効または使用済み・期限切れのトークンです',
+      );
+    }
+
     try {
       const payload = this.jwtService.verify(token);
 
@@ -83,9 +102,13 @@ export class UserService {
 
       await this.userRepository.save(newUser);
 
+      // トークンを使用済みに更新
+      record.used = true;
+      await this.tokenRepository.save(record);
+
       return { message: 'ユーザー登録が完了しました。' };
     } catch (err) {
-      throw new BadRequestException('無効または期限切れのトークンです');
+      throw new BadRequestException('トークン検証中にエラーが発生しました');
       console.error('エラー:', err);
     }
   }

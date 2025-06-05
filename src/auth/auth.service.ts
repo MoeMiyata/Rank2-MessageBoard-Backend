@@ -15,14 +15,6 @@ export class AuthService {
   ) {}
 
   async getAuth(name: string, password: string) {
-    // // 検証のためユーザを事前定義
-    // const predefinedUser = {
-    //   id: 1,
-    //   name: name,
-    //   hash: crypto.createHash('md5').update(password).digest('hex'), // パスワードはハッシュ化されていると仮定
-    // };
-    // const user = predefinedUser;
-
     // name, passwordからUserレコード検索
     if (!password) {
       throw new UnauthorizedException(); // パスワードが指定されていない場合は認証失敗
@@ -57,12 +49,16 @@ export class AuthService {
 
     if (auth) {
       // 更新
+      if (new Date(auth.expire_at) < new Date()) {
+        // 期限切れ → トークン再生成
+        auth.token = crypto.randomBytes(32).toString('hex');
+      }
       auth.expire_at = expire;
       await this.authRepository.save(auth);
-      ret.token = auth.token; ////////////////////// 期限切れならここもtokenを新しく生成して更新した方が良いのでは？
+      ret.token = auth.token;
     } else {
       // 挿入
-      const token = crypto.randomUUID();
+      const token = crypto.randomBytes(32).toString('hex');
       const record = {
         user_id: user.id,
         token: token,
