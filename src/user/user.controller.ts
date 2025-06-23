@@ -24,7 +24,7 @@ export class UserController {
   // }
 
   @Post('request-verification')
-  async requestVerification(
+  async requestEmailVerification(
     @Body('name') name: string,
     @Body('email') email: string,
     @Body('password') password: string,

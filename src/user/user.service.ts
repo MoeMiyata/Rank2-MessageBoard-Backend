@@ -174,7 +174,7 @@ export class UserService {
 
     await this.tokenRepository.save({
       email,
-      jwt,
+      token: jwt,
       expire_at: new Date(Date.now() + 15 * 60 * 1000),
     });
 
