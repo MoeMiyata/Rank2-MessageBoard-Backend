@@ -197,26 +197,16 @@ export class UserService {
   //   await this.userRepository.save(record);
   // }
 
-  async requestChangePassword(email: string) {
-    // // ログイン済みかチェック
-    // const now = new Date();
-    // const auth = await this.authRepository.findOne({
-    //   where: {
-    //     token: Equal(token),
-    //     expire_at: MoreThan(now),
-    //   },
-    // });
-
-    // if (!auth) {
-    //   throw new ForbiddenException();
-    // }
-
-    const user = await this.userRepository.findOne({ where: { email } });
+  async requestChangePassword(token: string, name: string, email: string) {
+    const user = await this.userRepository.findOne({ where: { name, email } });
     if (!user) {
       throw new BadRequestException('指定されたユーザーが存在しません');
     }
 
-    const jwt = this.jwtService.sign({ email }, { expiresIn: '15m' });
+    const jwt = this.jwtService.sign(
+      { token, name, email },
+      { expiresIn: '15m' },
+    );
 
     await this.tokenRepository.save({
       email,
@@ -230,8 +220,8 @@ export class UserService {
     await this.mailService.sendMail(
       email,
       '【重要】パスワード再設定のお願い',
-      // `${name}様<br><br>
-      `以下のURLからパスワードを再設定してください。<br><br>
+      `${name}様<br><br>
+      以下のURLからパスワードを再設定してください。<br><br>
       <a href="${verifyUrl}" target="_blank">${verifyUrl}</a><br><br>
       ※このURLは15分間のみ有効です。<br><br>
       MicroPost運営チーム`,
@@ -297,7 +287,9 @@ export class UserService {
   // PUTリクエストに対して作成
   async updateUser(
     token: string,
-    id: number,
+    id?: number,
+    payload?: { token: string; name: string; email: string },
+    record?: Token,
     name?: string,
     email?: string,
     password?: string,
@@ -307,6 +299,15 @@ export class UserService {
     imgSrc?: string,
   ) {
     console.log('In updateUser');
+
+    if (payload) {
+      const loginUser = await this.userRepository.findOne({
+        where: {
+          email: payload.email,
+        },
+      });
+      id = loginUser.id;
+    }
 
     // ログイン済みかチェック
     const now = new Date();
@@ -396,6 +397,12 @@ export class UserService {
 
     // ユーザー情報を保存
     await this.userRepository.update(id, updateData);
+
+    if (record) {
+      // トークンを使用済みに更新
+      record.used = true;
+      await this.tokenRepository.save(record);
+    }
   }
 
   // DELETEリクエストに対して作成

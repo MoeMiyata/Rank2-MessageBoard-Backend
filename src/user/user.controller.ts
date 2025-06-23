@@ -45,11 +45,22 @@ export class UserController {
   // パスワード再設定
   @Post('change-password')
   async requestChangePassword(
-    // @Body('token') token: string,
-    // @Body('name') name: string,
+    @Body('token') token: string,
+    @Body('name') name: string,
     @Body('email') email: string,
   ) {
-    return this.userService.requestChangePassword(email);
+    return this.userService.requestChangePassword(token, name, email);
+  }
+
+  @Post('verify-password')
+  async verifyAndUpdateUser(@Body('token') jwt: string) {
+    const { payload, record } = await this.userService.verifyEmail(jwt);
+    return await this.userService.updateUser(
+      payload.token,
+      null,
+      payload,
+      record,
+    );
   }
 
   // ユーザ情報取得
@@ -82,6 +93,8 @@ export class UserController {
     return await this.userService.updateUser(
       token,
       id,
+      null,
+      null,
       name,
       email,
       password,
