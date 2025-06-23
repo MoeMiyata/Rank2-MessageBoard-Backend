@@ -74,7 +74,46 @@ export class UserService {
     return { message: '確認メールを送信しました。' };
   }
 
-  async verifyAndCreateUser(token: string) {
+  // async verifyAndCreateUser(token: string) {
+  //   const record = await this.tokenRepository.findOne({ where: { token } });
+  //   if (!record || record.used || record.expire_at < new Date()) {
+  //     throw new BadRequestException(
+  //       '無効または使用済み・期限切れのトークンです',
+  //     );
+  //   }
+
+  //   try {
+  //     const payload = this.jwtService.verify(token);
+
+  //     const usedEmail = await this.userRepository.findOne({
+  //       where: { email: payload.email },
+  //     });
+  //     if (usedEmail) {
+  //       throw new BadRequestException(
+  //         'このメールアドレスは既に登録されています',
+  //       );
+  //     }
+
+  //     const hash = createHash('md5').update(payload.password).digest('hex');
+  //     const newUser = {
+  //       name: payload.name,
+  //       email: payload.email,
+  //       hash: hash,
+  //     };
+
+  //     await this.userRepository.save(newUser);
+
+  //     // トークンを使用済みに更新
+  //     record.used = true;
+  //     await this.tokenRepository.save(record);
+
+  //     return { message: 'ユーザー登録が完了しました。' };
+  //   } catch (err) {
+  //     throw new BadRequestException('トークン検証中にエラーが発生しました');
+  //     console.error('エラー:', err);
+  //   }
+  // }
+  async verifyEmail(token: string) {
     const record = await this.tokenRepository.findOne({ where: { token } });
     if (!record || record.used || record.expire_at < new Date()) {
       throw new BadRequestException(
@@ -85,33 +124,40 @@ export class UserService {
     try {
       const payload = this.jwtService.verify(token);
 
-      const usedEmail = await this.userRepository.findOne({
-        where: { email: payload.email },
-      });
-      if (usedEmail) {
-        throw new BadRequestException(
-          'このメールアドレスは既に登録されています',
-        );
-      }
-
-      const hash = createHash('md5').update(payload.password).digest('hex');
-      const newUser = {
-        name: payload.name,
-        email: payload.email,
-        hash: hash,
-      };
-
-      await this.userRepository.save(newUser);
-
-      // トークンを使用済みに更新
-      record.used = true;
-      await this.tokenRepository.save(record);
-
-      return { message: 'ユーザー登録が完了しました。' };
+      // 使用済みフラグは createUser 側で更新するためここでは残す
+      return { payload, record };
     } catch (err) {
+      console.error('トークン検証エラー:', err);
       throw new BadRequestException('トークン検証中にエラーが発生しました');
-      console.error('エラー:', err);
     }
+  }
+
+  async createUser(
+    payload: { name: string; email: string; password: string },
+    record: Token,
+  ) {
+    const usedEmail = await this.userRepository.findOne({
+      where: { email: payload.email },
+    });
+    if (usedEmail) {
+      throw new BadRequestException('このメールアドレスは既に登録されています');
+    }
+
+    const hash = createHash('md5').update(payload.password).digest('hex');
+
+    const newUser = {
+      name: payload.name,
+      email: payload.email,
+      hash: hash,
+    };
+
+    await this.userRepository.save(newUser);
+
+    // トークンを使用済みに更新
+    record.used = true;
+    await this.tokenRepository.save(record);
+
+    return { message: 'ユーザー登録が完了しました。' };
   }
 
   // // POSTリクエストに対して作成
@@ -151,26 +197,26 @@ export class UserService {
   //   await this.userRepository.save(record);
   // }
 
-  async requestChangePassword(token: string, name: string, email: string) {
-    // ログイン済みかチェック
-    const now = new Date();
-    const auth = await this.authRepository.findOne({
-      where: {
-        token: Equal(token),
-        expire_at: MoreThan(now),
-      },
-    });
+  async requestChangePassword(email: string) {
+    // // ログイン済みかチェック
+    // const now = new Date();
+    // const auth = await this.authRepository.findOne({
+    //   where: {
+    //     token: Equal(token),
+    //     expire_at: MoreThan(now),
+    //   },
+    // });
 
-    if (!auth) {
-      throw new ForbiddenException();
-    }
+    // if (!auth) {
+    //   throw new ForbiddenException();
+    // }
 
-    const user = await this.userRepository.findOne({ where: { name, email } });
+    const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
       throw new BadRequestException('指定されたユーザーが存在しません');
     }
 
-    const jwt = this.jwtService.sign({ name, email }, { expiresIn: '15m' });
+    const jwt = this.jwtService.sign({ email }, { expiresIn: '15m' });
 
     await this.tokenRepository.save({
       email,
@@ -184,8 +230,8 @@ export class UserService {
     await this.mailService.sendMail(
       email,
       '【重要】パスワード再設定のお願い',
-      `${name}様<br><br>
-      以下のURLからパスワードを再設定してください。<br><br>
+      // `${name}様<br><br>
+      `以下のURLからパスワードを再設定してください。<br><br>
       <a href="${verifyUrl}" target="_blank">${verifyUrl}</a><br><br>
       ※このURLは15分間のみ有効です。<br><br>
       MicroPost運営チーム`,
@@ -262,7 +308,7 @@ export class UserService {
   ) {
     console.log('In updateUser');
 
-    //ログイン済みかチェック
+    // ログイン済みかチェック
     const now = new Date();
     const auth = await this.authRepository.findOne({
       where: {

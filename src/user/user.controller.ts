@@ -32,19 +32,24 @@ export class UserController {
     return this.userService.requestEmailVerification(name, email, password);
   }
 
+  // @Post('verify-email')
+  // async verifyAndCreateUser(@Body() body: { token: string }) {
+  //   return this.userService.verifyAndCreateUser(body.token);
+  // }
   @Post('verify-email')
-  async verifyAndCreateUser(@Body() body: { token: string }) {
-    return this.userService.verifyAndCreateUser(body.token);
+  async verifyAndCreateUser(@Body('token') token: string) {
+    const { payload, record } = await this.userService.verifyEmail(token);
+    return await this.userService.createUser(payload, record);
   }
 
   // パスワード再設定
   @Post('change-password')
   async requestChangePassword(
-    @Body('token') token: string,
-    @Body('name') name: string,
+    // @Body('token') token: string,
+    // @Body('name') name: string,
     @Body('email') email: string,
   ) {
-    return this.userService.requestChangePassword(token, name, email);
+    return this.userService.requestChangePassword(email);
   }
 
   // ユーザ情報取得
