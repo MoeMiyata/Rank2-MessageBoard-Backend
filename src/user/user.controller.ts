@@ -53,14 +53,15 @@ export class UserController {
   }
 
   @Post('verify-password')
-  async verifyAndUpdateUser(@Body('token') jwt: string) {
+  async verifyPassword(@Body('token') jwt: string) {
     const { payload, record } = await this.userService.verifyEmail(jwt);
-    return await this.userService.updateUser(
-      payload.token,
-      null,
-      payload,
-      record,
-    );
+    // return await this.userService.updateUser(
+    //   payload.token,
+    //   null,
+    //   payload,
+    //   record,
+    // );
+    return { payload, record };
   }
 
   // ユーザ情報取得
