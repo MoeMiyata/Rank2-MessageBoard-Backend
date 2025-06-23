@@ -306,6 +306,7 @@ export class UserService {
           email: payload.email,
         },
       });
+      console.log('loginUser(updateUser):', loginUser);
       id = loginUser.id;
     }
 
