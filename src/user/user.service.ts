@@ -151,21 +151,34 @@ export class UserService {
   //   await this.userRepository.save(record);
   // }
 
-  async requestChangePassword(name: string, email: string) {
+  async requestChangePassword(token: string, name: string, email: string) {
+    // ログイン済みかチェック
+    const now = new Date();
+    const auth = await this.authRepository.findOne({
+      where: {
+        token: Equal(token),
+        expire_at: MoreThan(now),
+      },
+    });
+
+    if (!auth) {
+      throw new ForbiddenException();
+    }
+
     const user = await this.userRepository.findOne({ where: { name, email } });
     if (!user) {
       throw new BadRequestException('指定されたユーザーが存在しません');
     }
 
-    const token = this.jwtService.sign({ name, email }, { expiresIn: '15m' });
+    const jwt = this.jwtService.sign({ name, email }, { expiresIn: '15m' });
 
     await this.tokenRepository.save({
       email,
-      token,
+      jwt,
       expire_at: new Date(Date.now() + 15 * 60 * 1000),
     });
 
-    const verifyUrl = `https://rank2-messageboard-frontend.onrender.com/change-password?token=${token}`;
+    const verifyUrl = `https://rank2-messageboard-frontend.onrender.com/change-password?token=${jwt}`;
     console.log(verifyUrl);
 
     await this.mailService.sendMail(

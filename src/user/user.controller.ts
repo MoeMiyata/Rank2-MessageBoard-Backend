@@ -37,6 +37,16 @@ export class UserController {
     return this.userService.verifyAndCreateUser(body.token);
   }
 
+  // パスワード再設定
+  @Post('change-password')
+  async requestChangePassword(
+    @Body('token') token: string,
+    @Body('name') name: string,
+    @Body('email') email: string,
+  ) {
+    return this.userService.requestChangePassword(token, name, email);
+  }
+
   // ユーザ情報取得
   @Get(':id')
   async getUser(@Param('id') id: number, @Query('token') token: string) {
