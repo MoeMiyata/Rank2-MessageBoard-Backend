@@ -197,14 +197,19 @@ export class UserService {
   //   await this.userRepository.save(record);
   // }
 
-  async requestChangePassword(token: string, name: string, email: string) {
+  async requestChangePassword(
+    token: string,
+    id: number,
+    name: string,
+    email: string,
+  ) {
     const user = await this.userRepository.findOne({ where: { name, email } });
     if (!user) {
       throw new BadRequestException('指定されたユーザーが存在しません');
     }
 
     const jwt = this.jwtService.sign(
-      { token, name, email },
+      { token, id, name, email },
       { expiresIn: '15m' },
     );
 
@@ -287,8 +292,7 @@ export class UserService {
   // PUTリクエストに対して作成
   async updateUser(
     token: string,
-    id?: number,
-    payload?: { token: string; name: string; email: string },
+    id: number,
     record?: Token,
     name?: string,
     email?: string,
@@ -299,16 +303,6 @@ export class UserService {
     imgSrc?: string,
   ) {
     console.log('In updateUser');
-
-    if (payload) {
-      const loginUser = await this.userRepository.findOne({
-        where: {
-          email: payload.email,
-        },
-      });
-      console.log('loginUser(updateUser):', loginUser);
-      id = loginUser.id;
-    }
 
     // ログイン済みかチェック
     const now = new Date();

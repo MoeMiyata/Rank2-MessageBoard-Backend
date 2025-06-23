@@ -46,10 +46,11 @@ export class UserController {
   @Post('change-password')
   async requestChangePassword(
     @Body('token') token: string,
+    @Body('id') id: number,
     @Body('name') name: string,
     @Body('email') email: string,
   ) {
-    return this.userService.requestChangePassword(token, name, email);
+    return this.userService.requestChangePassword(token, id, name, email);
   }
 
   @Post('verify-password')
@@ -94,7 +95,6 @@ export class UserController {
     return await this.userService.updateUser(
       token,
       id,
-      null,
       null,
       name,
       email,
