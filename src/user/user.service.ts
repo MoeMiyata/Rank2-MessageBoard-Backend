@@ -134,7 +134,7 @@ export class UserService {
     }
   }
 
-  async varifyReCAPTCHA(recaptchaToken: string) {
+  async verifyReCAPTCHA(recaptchaToken: string) {
     const url = 'https://www.google.com/recaptcha/api/siteverify';
 
     try {
@@ -151,7 +151,7 @@ export class UserService {
         data.success === true &&
         (data.score === undefined || data.score >= 0.5)
       ) {
-        return res; // 成功時はそのままレスポンス返す
+        return res.data; // 成功時はそのままレスポンス返す
       } else {
         throw new Error('reCAPTCHA 検証に失敗しました');
       }

@@ -43,8 +43,8 @@ export class UserController {
   }
 
   @Post('verify-reCAPTCHA')
-  async varifyReCAPTCHA(@Body('recaptchaToken') recaptchaToken: string) {
-    return await this.userService.varifyReCAPTCHA(recaptchaToken);
+  async verifyReCAPTCHA(@Body('recaptchaToken') recaptchaToken: string) {
+    return await this.userService.verifyReCAPTCHA(recaptchaToken);
   }
 
   // パスワード再設定
