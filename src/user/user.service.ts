@@ -8,6 +8,8 @@ import {
 import { createHash } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, Equal, MoreThan } from 'typeorm';
+import axios from 'axios';
+
 import { User } from '../entities/user.entity';
 import { Auth } from '../entities/auth.entity';
 import { Token } from '../entities/token.entity';
@@ -129,6 +131,32 @@ export class UserService {
     } catch (err) {
       console.error('トークン検証エラー:', err);
       throw new BadRequestException('トークン検証中にエラーが発生しました');
+    }
+  }
+
+  async varifyReCAPTCHA(recaptchaToken: string) {
+    const url = 'https://www.google.com/recaptcha/api/siteverify';
+
+    try {
+      const res = await axios.post(url, null, {
+        params: {
+          secret: process.env.RECAPTCHA_SECRET_KEY,
+          response: recaptchaToken,
+        },
+      });
+
+      const data = res.data;
+      // 成功かチェック（v2なら `data.success`、v3なら `score` も）
+      if (
+        data.success === true &&
+        (data.score === undefined || data.score >= 0.5)
+      ) {
+        return res; // 成功時はそのままレスポンス返す
+      } else {
+        throw new Error('reCAPTCHA 検証に失敗しました');
+      }
+    } catch (err) {
+      throw new Error(`reCAPTCHA 検証エラー: ${(err as any).message}`);
     }
   }
 

@@ -42,6 +42,11 @@ export class UserController {
     return await this.userService.createUser(payload, record);
   }
 
+  @Post('verify-reCAPTCHA')
+  async varifyReCAPTCHA(@Body('recaptchaToken') recaptchaToken: string) {
+    return await this.userService.varifyReCAPTCHA(recaptchaToken);
+  }
+
   // パスワード再設定
   @Post('change-password')
   async requestChangePassword(
