@@ -22,6 +22,11 @@ export class PostController {
     return await this.postService.createPost(message, token);
   }
 
+  @Post('extract-keywords')
+  async extractKeywords(@Body('message') message: string): Promise<string[]> {
+    return await this.postService.extractKeywords(message);
+  }
+
   @Get()
   async getList(
     @Query('token') token: string,

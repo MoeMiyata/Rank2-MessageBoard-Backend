@@ -8,6 +8,8 @@ import { Repository, Equal, MoreThan } from 'typeorm';
 import { MicroPost } from '../entities/microposts.entity';
 import { Auth } from '../entities/auth.entity';
 
+import axios from 'axios';
+
 @Injectable()
 export class PostService {
   constructor(
@@ -38,6 +40,19 @@ export class PostService {
     };
 
     await this.microPostsRepository.save(record);
+  }
+
+  async extractKeywords(message: string) {
+    try {
+      const response = await axios.post(
+        'http://localhost:5005/extract_keywords',
+        { message },
+      );
+      return response.data;
+    } catch (error) {
+      console.error('Flaskサーバとの通信エラー:', error);
+      return [];
+    }
   }
 
   // GETリクエストに対して作成
