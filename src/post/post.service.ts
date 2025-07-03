@@ -58,7 +58,13 @@ export class PostService {
   async extractKeywords(text: string): Promise<string[]> {
     return new Promise((resolve, reject) => {
       // NestJSのサービスファイルとPythonスクリプトの位置関係を正確に指定
-      const scriptPath = join(__dirname, 'pythonAPI', 'keyBERT.py');
+      const scriptPath = join(
+        process.cwd(),
+        'src',
+        'post',
+        'pythonAPI',
+        'keyBERT.py',
+      );
       const python = spawn('python3', [scriptPath]);
 
       let output = '';
