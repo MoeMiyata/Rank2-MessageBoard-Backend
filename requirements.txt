@@ -1,0 +1,4 @@
+keybert
+scikit-learn
+transformers
+sentence-transformers
