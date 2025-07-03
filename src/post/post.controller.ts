@@ -23,8 +23,8 @@ export class PostController {
   }
 
   @Post('extract-keywords')
-  async extractKeywords(@Body('message') message: string): Promise<string[]> {
-    return await this.postService.extractKeywords(message);
+  async extractKeywords(@Body('content') content: string): Promise<string[]> {
+    return await this.postService.extractKeywords(content);
   }
 
   @Get()

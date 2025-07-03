@@ -8,7 +8,7 @@ import { Repository, Equal, MoreThan } from 'typeorm';
 import { MicroPost } from '../entities/microposts.entity';
 import { Auth } from '../entities/auth.entity';
 
-import axios from 'axios';
+import { spawn } from 'child_process';
 
 @Injectable()
 export class PostService {
@@ -42,17 +42,50 @@ export class PostService {
     await this.microPostsRepository.save(record);
   }
 
-  async extractKeywords(message: string) {
-    try {
-      const response = await axios.post(
-        'http://localhost:5005/extract_keywords',
-        { message },
-      );
-      return response.data;
-    } catch (error) {
-      console.error('Flaskサーバとの通信エラー:', error);
-      return [];
-    }
+  // async extractKeywords(message: string) {
+  //   try {
+  //     const response = await axios.post(
+  //       'http://localhost:5005/extract_keywords',
+  //       { message },
+  //     );
+  //     return response.data;
+  //   } catch (error) {
+  //     console.error('Flaskサーバとの通信エラー:', error);
+  //     return [];
+  //   }
+  // }
+  async extractKeywords(text: string): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      const python = spawn('python3', ['../post/pythonAPI/keyBERT.py']); // 正しいパスを指定
+
+      let output = '';
+      let error = '';
+
+      python.stdout.on('data', (data) => {
+        output += data.toString();
+      });
+
+      python.stderr.on('data', (data) => {
+        error += data.toString();
+      });
+
+      python.on('close', (code) => {
+        if (code !== 0 || error) {
+          return reject(`Python error: ${error}`);
+        }
+        try {
+          const keywords = JSON.parse(output);
+          resolve(keywords);
+        } catch (err) {
+          console.log(err);
+          reject('JSON parse error');
+        }
+      });
+
+      // 投稿内容をPythonスクリプトに送信
+      python.stdin.write(text);
+      python.stdin.end();
+    });
   }
 
   // GETリクエストに対して作成
