@@ -9,6 +9,7 @@ import { MicroPost } from '../entities/microposts.entity';
 import { Auth } from '../entities/auth.entity';
 
 import { spawn } from 'child_process';
+import { join } from 'path';
 
 @Injectable()
 export class PostService {
@@ -56,7 +57,9 @@ export class PostService {
   // }
   async extractKeywords(text: string): Promise<string[]> {
     return new Promise((resolve, reject) => {
-      const python = spawn('python3', ['../post/pythonAPI/keyBERT.py']); // 正しいパスを指定
+      // NestJSのサービスファイルとPythonスクリプトの位置関係を正確に指定
+      const scriptPath = join(__dirname, 'pythonAPI', 'keyBERT.py');
+      const python = spawn('python3', [scriptPath]);
 
       let output = '';
       let error = '';
