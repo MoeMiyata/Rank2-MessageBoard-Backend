@@ -11,8 +11,10 @@ async function bootstrap() {
 
   // CROS policy解決のため挿入
   app.enableCors({
-    origin: '*',
-    allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+    origin: 'https://rank2-messageboard-frontend.onrender.com',
+    credentials: true,
+    // origin: '*',
+    // allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
   });
 
   // // const path = require('path');
