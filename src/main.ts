@@ -15,6 +15,8 @@ async function bootstrap() {
     credentials: true,
     // origin: '*',
     // allowedHeaders: 'Origin, X-Requested-With, Content-Type, Accept',
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
 
   // // const path = require('path');
