@@ -23,8 +23,14 @@ export class PostController {
   }
 
   @Post('extract-keywords')
-  async extractKeywords(@Body('content') content: string): Promise<string[]> {
-    return await this.postService.extractKeywords(content);
+  async extractKeywords(@Body('content') content: string) {
+    const keywords = await this.postService.extractKeywords(content);
+    return await this.postService.generateWikipediaUrl(keywords);
+  }
+
+  @Get('extract-keywords')
+  async getKeywordLinks() {
+    return await this.postService.getKeywordLinks();
   }
 
   @Get()

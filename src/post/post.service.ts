@@ -10,6 +10,7 @@ import { Auth } from '../entities/auth.entity';
 
 import { spawn } from 'child_process';
 import { join } from 'path';
+import { KeywordLinks } from 'src/entities/keywordlinks.entity';
 
 @Injectable()
 export class PostService {
@@ -18,6 +19,8 @@ export class PostService {
     private microPostsRepository: Repository<MicroPost>,
     @InjectRepository(Auth)
     private authRepository: Repository<Auth>,
+    @InjectRepository(KeywordLinks)
+    private readonly keywordLinksRepository: Repository<KeywordLinks>,
   ) {}
 
   // POSTリクエストに対して作成
@@ -95,6 +98,41 @@ export class PostService {
       python.stdin.write(text);
       python.stdin.end();
     });
+  }
+
+  async generateWikipediaUrl(keywords: string[]) {
+    for (const kwd of keywords) {
+      const existing = await this.keywordLinksRepository.findOne({
+        where: { keyword: kwd },
+      });
+
+      if (existing) {
+        continue; // スキップ
+      }
+
+      // 英語キーワードかどうかを判定（アルファベットと空白のみ）
+      const isEnglish = /^[A-Za-z\s]+$/.test(kwd);
+      const baseUrl = isEnglish
+        ? 'https://en.wikipedia.org/wiki/'
+        : 'https://ja.wikipedia.org/wiki/';
+
+      const kwdurl = `${baseUrl}${encodeURIComponent(kwd)}`;
+      const record = {
+        keyword: kwd,
+        url: kwdurl,
+      };
+      await this.keywordLinksRepository.save(record);
+    }
+  }
+
+  // キーワードのURL取得
+  async getKeywordLinks() {
+    const keywordLinks = await this.keywordLinksRepository.find();
+
+    // 必要ならログ出力
+    console.log('keywordLinks:', keywordLinks);
+
+    return keywordLinks;
   }
 
   // GETリクエストに対して作成
